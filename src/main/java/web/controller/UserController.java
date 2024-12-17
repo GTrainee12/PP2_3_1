@@ -1,6 +1,6 @@
 package web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,7 @@ import web.service.UserServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Controller
 public class UserController {
@@ -31,7 +32,9 @@ public class UserController {
     }
 
     @GetMapping("/user-create")
-    public String createUserForm(User user) {
+    public String createUserForm(Model model) {
+        model.addAttribute("user", new User());
+
         return "user-create";
     }
 
@@ -43,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/user-update")
-    public String updateUserForm(@RequestParam("id") long id, Model model) {
+    public String updateUserForm(@RequestParam("id") Long id, Model model) {
         Optional<User> userOptional = userServiceImpl.findById(id);
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
@@ -60,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/user-delete")
-    public String deleteUser(@RequestParam("id") long id, RedirectAttributes redirectAttributes) {
+    public String deleteUser(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         userServiceImpl.deleteUser(id);
         redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
         return "redirect:/users";
